@@ -31,3 +31,16 @@ jobs:
             tags: ${{ secrets.DOCKER_HUB_USERNAME }}/keeper:latest
             cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/keeper:buildcache
             cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/keeper:buildcache,mode=max
+
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Checking connection
+        run: ssh -q -o "BatchMode=yes" -i ~/.ssh/id_rsa ${{ SSH_USER }}@${{ SSH_HOST }} "echo 2>&1" && echo $host SSH_OK || echo $host SSH_NOK
