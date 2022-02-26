@@ -11,7 +11,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY . .
-RUN npm install --quiet && npm run build
+RUN npm install --silent && npm run build
 
 # nginx state for serving content
 FROM nginx:alpine
