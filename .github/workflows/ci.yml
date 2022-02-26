@@ -2,8 +2,6 @@ name: ci
 
 on:
   push:
-    branches:
-      - "master"
     tags:
       - "v*"
 
@@ -50,9 +48,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Workdir
-        run: echo ${PWD}
-      # - name: Copying the contents of the file
-      #   run: scp -rp . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/ 
-      # - name: Starting docker container
-      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/ && docker run --rm -it -p 8080:80 mukkundsunjii/keeper:latest"
+      - name: Copying the contents of the file
+        run: scp -rp ~/actions-runner/_work/keeper/keeper/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/ 
+      - name: Starting docker container
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/ && docker run --rm -d -p 8080:80 mukkundsunjii/keeper:latest"
