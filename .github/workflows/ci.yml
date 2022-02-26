@@ -51,7 +51,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Workdir
-        uses: echo ${PWD}
+        run: echo ${PWD}
       # - name: Copying the contents of the file
       #   run: scp -rp . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/ 
       # - name: Starting docker container
