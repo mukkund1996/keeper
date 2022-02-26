@@ -50,5 +50,7 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Copying the contents of the file
+        run: scp -rp . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/ 
       - name: Starting docker container
-        run: docker run --rm -it -p 8080:80 mukkundsunjii/keeper:latest
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/ && docker run --rm -it -p 8080:80 mukkundsunjii/keeper:latest"
