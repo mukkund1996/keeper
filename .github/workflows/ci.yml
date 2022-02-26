@@ -32,6 +32,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    needs: build
 
     steps:
       - name: Install SSH Key
@@ -49,6 +50,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Copying the contents of the file
-        run: scp -rp ~/actions-runner/_work/keeper/keeper/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/ 
+        run: scp -rp ~/actions-runner/_work/keeper/keeper/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
       - name: Starting docker container
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/ && docker run --rm -d -p 8080:80 mukkundsunjii/keeper:latest"
