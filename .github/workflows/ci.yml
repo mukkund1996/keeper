@@ -22,8 +22,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file: ./Dockerfile
+          context: ./apps/keeper/
+          file: ./apps/keeper/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/keeper:latest
@@ -51,5 +51,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Copying the contents of the file
         run: scp -rp ~/actions-runner/_work/keeper/keeper/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
-      - name: Starting docker container
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/ && docker run --rm -d -p 8080:80 mukkundsunjii/keeper:latest"
+      - name: Starting Keeper - React App
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/workdir/apps/keeper && docker run --rm -d -p 8080:80 mukkundsunjii/keeper:latest"
