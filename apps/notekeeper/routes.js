@@ -1,12 +1,13 @@
 const express = require("express")
 const Note = require("./models/Note")
+
 const router = express.Router()
 
 router.post("/note", async (req, res) => {
     const postedNote = new Note(req.body);
     console.log(`Received note ${postedNote.title}.`);
     await postedNote.save();
-    res.send(postedNote);
+    res.send(postedNote._id.toString());
 })
 
 router.delete("/note/:id", async (req, res) =>{
@@ -16,7 +17,7 @@ router.delete("/note/:id", async (req, res) =>{
     }
     catch{
         res.status(404)
-		res.send({ error: "Post doesn't exist!" })
+		res.send({ error: "Deletion failed!" })
     }
 })
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import Zoom from "@mui/material/Zoom";
-import noteKeeperUri from "./NoteKeeper";
 
 function CreateArea(props) {
   const [note, setNote] = useState({
@@ -23,20 +22,6 @@ function CreateArea(props) {
 
   function submitNote(event) {
     props.onAdd(note);
-    console.log(note);
-    // Send data to the backend via POST
-    fetch(noteKeeperUri + 'note', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(note)
-    }).catch(error => console.log(error));
-
-    console.log("Sent data to NoteKeeper.");
-
     setNote({
       title: "",
       content: ""

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Note from "./Note";
@@ -8,32 +8,48 @@ import noteKeeperUri from "./NoteKeeper";
 function App() {
   const [notes, setNotes] = useState([]);
 
-  fetch((noteKeeperUri + 'notes'), {
-    method: 'GET',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      // setState((prevNotes) => {
-      //   return [...prevNotes, json]
-      // });
-      console.log(result);
-    })
-    // .catch((error) => {
-    //   console.log("Error reading notes: "+ error)
-    // });
+  // This method fetches the records from the database.
+  useEffect(() => {
+    fetch(noteKeeperUri + '/notes')
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(`Loading ${json.length} existing notes from DB`)
+        setNotes(json)
+      })
+      .catch((error) => { console.log(error) });
+  }, []);
 
   function addNote(newNote) {
+    // Send data to the backend via POST
+    fetch(noteKeeperUri + 'note', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newNote)
+    })
+      .then((res) => res.text())
+      .then((_id) => { newNote._id = _id; })
+      .catch((error) => console.log(error));
+
+    console.log("Sent data to NoteKeeper.");
+    // Updating the new note with _id
     setNotes((prevNotes) => {
       return [...prevNotes, newNote];
     });
   }
 
   function deleteNote(id) {
+    let noteToDelete = notes.filter((noteItem, index) => {
+      return index === id;
+    });
+    // Deleting it from the db
+    fetch(noteKeeperUri + `note/${noteToDelete[0]._id}`, { method: 'DELETE' })
+      .then(() => console.log(`Succesfully deleted note!`))
+      .catch((error) => { console.error(error); });
+
+    // Deleting it from the react state
     setNotes((prevNotes) => {
       return prevNotes.filter((noteItem, index) => {
         return index !== id;
