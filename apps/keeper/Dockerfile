@@ -11,6 +11,9 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY . .
+
+ARG REACT_APP_API_BASE_URL
+ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
 RUN npm install --silent && npm run build
 
 # nginx state for serving content
@@ -21,5 +24,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 # Copy static assets from builder stage
 COPY --from=builder /app/build .
+
+EXPOSE $KEEPER_DOCKER_PORT
 # Containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

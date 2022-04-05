@@ -132,4 +132,6 @@ dist
 */.pnp.*
 
 .secrets
+.env
 .Ds_Store
+

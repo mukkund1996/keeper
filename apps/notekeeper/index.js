@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const routes = require("./routes");
+const routes = require("./routes/routes");
 
-const appPort = process.env.NOTEKEEPER_PORT || 4000;
-const mongoClusterName = process.env.MONGO_CLUSTER || "notekeeperapp";
-const mongoUser = process.env.MONGO_USER || "notekeeper";
-const mongoPass = process.env.MONGO_PASS || "VvwQH5YWEswrmDm1";
-const dbName = "notesdb";
+const appPort = process.env.NOTEKEEPER_DOCKER_PORT;
+const mongoClusterName = process.env.MONGO_CLUSTER;
+const mongoUser = process.env.MONGO_USER;
+const mongoPass = process.env.MONGO_PASS;
+const dbName = process.env.MONGO_DB_NAME;
 const uri = `mongodb+srv://${mongoClusterName}:${mongoPass}@${mongoUser}.lc4sl.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 // Connect to MongoDB database
