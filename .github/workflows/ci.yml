@@ -70,10 +70,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Creating the .env file
-        run: echo ${{ secrets.ENV_PROD }} | base64 --decode > ~/actions-runner/_work/keeper/.env
+        run: echo ${{ secrets.ENV_PROD }} | base64 --decode > ~/actions-runner/_work/keeper/keeper/.env
       - name: Creating the workdir
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ~/workdir && rm -rf ~/workdir/*"
       - name: Copying the required files
-        run: scp -rp ~/actions-runner/_work/keeper/docker-compose.yml ~/actions-runner/_work/keeper/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
+        run: scp -rp ~/actions-runner/_work/keeper/keeper/docker-compose.yml ~/actions-runner/_work/keeper/keeper/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
       - name: Starting Keeper - React App
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker-compose -f '~/workdir/docker-compose.yml' up -d"
