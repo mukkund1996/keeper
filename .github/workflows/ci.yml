@@ -49,25 +49,31 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.SERVER_IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.SERVER_IMAGE_NAME }}:buildcache,mode=max
 
-  # deploy:
-  #   runs-on: self-hosted
-  #   needs: build
+  deploy:
+    runs-on: self-hosted
+    needs: build
 
-  #   steps:
-  #     - name: Install SSH Key
-  #       uses: shimataro/ssh-key-action@v2
-  #       with:
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         known_hosts: "just-a-placeholder-so-we-dont-get-errors"
-  #         if_key_exists: ignore
-  #     - name: Adding Known Hosts
-  #       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-  #     - name: Checking connection
-  #       run: ssh -q -o "BatchMode=yes" -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 2>&1" && echo $host SSH_OK || echo $host SSH_NOK
+    steps:
+      # Connecting to production server
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: "just-a-placeholder-so-we-dont-get-errors"
+          if_key_exists: ignore
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Checking connection
+        run: ssh -q -o "BatchMode=yes" -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 2>&1" && echo $host SSH_OK || echo $host SSH_NOK
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Copying the contents of the file
-  #       run: scp -rp ~/actions-runner/_work/keeper/keeper/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
-  #     - name: Starting Keeper - React App
-  #       run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker run --rm -d -p 8080:80 mukkundsunjii/keeper:latest"
+      # Deploying using docker-compose
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Creating the .env file
+        run: echo ${{ secrets.ENV_PROD }} | base64 --decode > ~/actions-runner/_work/keeper/.env
+      - name: Creating the workdir
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ~/workdir && rm -rf ~/workdir/*"
+      - name: Copying the required files
+        run: scp -rp ~/actions-runner/_work/keeper/docker-compose.yml ~/actions-runner/_work/keeper/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
+      - name: Starting Keeper - React App
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker-compose -f '~/workdir/docker-compose.yml' up -d"
