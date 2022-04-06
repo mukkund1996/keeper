@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes/routes");
 
-const appPort = process.env.NOTEKEEPER_DOCKER_PORT;
+const appPort = process.env.REACT_APP_NOTEKEEPER_DOCKER_PORT;
 const mongoClusterName = process.env.MONGO_CLUSTER;
 const mongoUser = process.env.MONGO_USER;
 const mongoPass = process.env.MONGO_PASS;

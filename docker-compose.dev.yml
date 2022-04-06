@@ -1,8 +1,10 @@
+# Dev version to build images locally
 version: '2'
 services:
   notekeeper:
-    image: mukkundsunjii/notekeeper
     env_file: .env
+    build: 
+      context: ./apps/notekeeper
     restart: unless-stopped
     ports:
       - $REACT_APP_NOTEKEEPER_LOCAL_PORT:$REACT_APP_NOTEKEEPER_DOCKER_PORT
@@ -10,10 +12,13 @@ services:
       - backend
       - frontend
   keeper:
-    env_file: .env
     depends_on:
       - notekeeper
-    image: mukkundsunjii/keeper
+    env_file: .env
+    build:
+      context: ./apps/keeper
+      args:
+        - REACT_APP_API_BASE_URL=$REACT_APP_NOTEKEEPER_HOSTIP
     ports:
       - $KEEPER_LOCAL_PORT:$KEEPER_DOCKER_PORT
     networks:

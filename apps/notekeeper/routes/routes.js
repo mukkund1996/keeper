@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require('path');
 const Note = require("../models/Note")
 
 const router = express.Router()
@@ -27,7 +28,7 @@ router.get("/notes", async (req, res) => {
 })
 
 router.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(path.resolve(__dirname, '..') + "/index.html");
 })
 
 module.exports = router

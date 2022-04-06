@@ -62,7 +62,6 @@ jobs:
   #         if_key_exists: ignore
   #     - name: Adding Known Hosts
   #       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
   #     - name: Checking connection
   #       run: ssh -q -o "BatchMode=yes" -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 2>&1" && echo $host SSH_OK || echo $host SSH_NOK
 

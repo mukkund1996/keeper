@@ -10,7 +10,7 @@ function App() {
 
   // This method fetches the records from the database.
   useEffect(() => {
-    fetch(noteKeeperUri + '/notes')
+    fetch(noteKeeperUri + 'notes')
       .then((response) => response.json())
       .then((json) => {
         console.log(`Loading ${json.length} existing notes from DB`)

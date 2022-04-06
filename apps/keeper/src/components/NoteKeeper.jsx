@@ -1,6 +1,4 @@
-const noteKeeperHostIp = process.env.NOTEKEEPER_HOSTIP;
-const noteKeeperPort = process.env.NOTEKEEPER_DOCKER_PORT;
-
-const noteKeeperUri = `http://${noteKeeperHostIp}:${noteKeeperPort}/api/v1/`;
-
+const api_host = process.env.REACT_APP_NOTEKEEPER_HOSTIP || "localhost";
+const api_port = process.env.REACT_APP_NOTEKEEPER_DOCKER_PORT || 4000
+const noteKeeperUri = `http://${api_host}:${api_port}/api/v1/`;
 export default noteKeeperUri;
