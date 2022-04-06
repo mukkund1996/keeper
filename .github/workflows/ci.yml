@@ -76,4 +76,4 @@ jobs:
       - name: Copying the required files
         run: scp -rp ~/actions-runner/_work/keeper/keeper/docker-compose.yml ~/actions-runner/_work/keeper/keeper/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/workdir/
       - name: Starting Keeper - React App
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "docker-compose -f ~/workdir/docker-compose.yml up -d"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "${HOME}/.docker/cli-plugins/docker-compose -f ~/workdir/docker-compose.yml up -d"
